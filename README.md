@@ -21,7 +21,7 @@ This modified version adds powerful batch processing capabilities to the origina
 
 ```bash
 # Clone this repository
-git clone <your-repo-url>
+git clone https://github.com/real6c/IOPaintDataset.git
 cd IOPaint
 
 # Create and activate virtual environment
