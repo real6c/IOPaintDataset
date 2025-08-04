@@ -64,34 +64,44 @@ def run(
     mask: Path = Option(
         ...,
         help="Mask folders or file path. "
-        "If it is a directory, the mask images in the directory should have the same name as the original image."
-        "If it is a file, all images will use this mask."
+        "If it is a directory, the mask images in the directory should have the same name as the original image "
+        "with optional suffix (default: _mask). "
+        "If it is a file, all images will use this mask. "
         "Mask will automatically resize to the same size as the original image.",
     ),
     output: Path = Option(..., help="Output directory or file path"),
     config: Path = Option(
         None, help="Config file path. You can use dump command to create a base config."
     ),
-    concat: bool = Option(
-        False, help="Concat original image, mask and output images into one image"
-    ),
-    model_dir: Path = Option(
-        DEFAULT_MODEL_DIR,
-        help=MODEL_DIR_HELP,
-        file_okay=False,
-        callback=setup_model_dir,
-    ),
+    concat: bool = Option(False, help="Concatenate original image, mask, and result"),
+    recursive: bool = Option(False, help="Recursively search for images in subdirectories"),
+    mask_suffix: str = Option("_mask", help="Suffix for mask filenames (e.g., '_mask' for image_mask.png)"),
+    num_workers: int = Option(4, help="Number of parallel workers for processing"),
+    verbose: bool = Option(False, help="Enable verbose debug output"),
 ):
-    from iopaint.download import cli_download_model, scan_models
-
-    scanned_models = scan_models()
-    if model not in [it.name for it in scanned_models]:
-        logger.info(f"{model} not found in {model_dir}, try to downloading")
-        cli_download_model(model)
-
     from iopaint.batch_processing import batch_inpaint
 
-    batch_inpaint(model, device, image, mask, output, config, concat)
+    # Configure logging level based on verbose flag
+    if verbose:
+        import logging
+        logging.getLogger("iopaint").setLevel(logging.DEBUG)
+    else:
+        import logging
+        logging.getLogger("iopaint").setLevel(logging.INFO)
+
+    batch_inpaint(
+        model=model,
+        device=device,
+        image=image,
+        mask=mask,
+        output=output,
+        config=config,
+        concat=concat,
+        recursive=recursive,
+        mask_suffix=mask_suffix,
+        num_workers=num_workers,
+        verbose=verbose,
+    )
 
 
 @typer_app.command(help="Start IOPaint server")
