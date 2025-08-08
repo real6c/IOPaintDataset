@@ -2,6 +2,9 @@
 
 This is a **modified version** of the original [IOPaint repository](https://github.com/Sanster/IOPaint) with enhanced batch processing capabilities.
 
+**Note**
+This tool is part of a larger project for creating a web-scraped image dataset for training YOLO models. The full project is available [on HuggingFace](https://huggingface.co/datasets/lreal/BingRecycle40k).
+
 ## Original Repository
 
 This fork is based on the excellent work by [Sanster/IOPaint](https://github.com/Sanster/IOPaint) - a free and open-source inpainting & outpainting tool powered by SOTA AI models.
